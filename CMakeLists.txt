@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.16)
 project(UsageTracker VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 find_package(Qt6 REQUIRED COMPONENTS Quick)
 
@@ -33,13 +34,20 @@ set_target_properties(appUsageTracker PROPERTIES
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
     MACOSX_BUNDLE TRUE
     WIN32_EXECUTABLE TRUE
+    CXX_STANDARD 20
 )
 
 find_package(Qt6 REQUIRED COMPONENTS Widgets)
+if(WIN32)
+  set(CMAKE_PREFIX_PATH ${CMAKE_PREF})
+  set(SQLite3_LIBRARY ${SQLITE_LIB})
+endif()
+find_package(SQLite3)
 
 target_link_libraries(appUsageTracker
     PRIVATE Qt6::Quick
     PRIVATE Qt6::Widgets
+    PRIVATE SQLite::SQLite3
 )
 
 install(TARGETS appUsageTracker

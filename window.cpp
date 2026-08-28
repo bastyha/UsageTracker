@@ -4,6 +4,7 @@
 #include <QMenu>
 #include <QVBoxLayout>
 #include <QLabel>
+#include <sqlite3.h>
 
 Window::Window() {
     minimizeAction = new QAction("Mi&nimize", this);
@@ -44,13 +45,60 @@ Window::Window() {
         QIcon::fromTheme(QIcon::ThemeIcon::Computer)
     );
 
+    sqlite3_open("db.sql", &db);
+
+    sqlite3_exec(
+        db,
+        "CREATE TABLE person (id INT PRIMARY KEY, name TEXT, age INT);"
+        "INSERT INTO person VALUES(1, 'Jánűs', 23);"
+        "INSERT INTO person VALUES(2, 'Margit', 36);",
+        nullptr,
+        nullptr,
+        nullptr
+        );
+
+    sqlite3_stmt* stmt;
+    sqlite3_prepare_v2(
+        db,
+        "SELECT * FROM person;",
+        -1,
+        &stmt,
+        nullptr
+        );
+
+    while (1)
+    {
+        int res = sqlite3_step(stmt);
+        if (res == SQLITE_ROW)
+        {
+                qDebug() <<
+                    sqlite3_column_int(stmt, 0) << " "<<
+                    QString::fromUtf8(sqlite3_column_text(stmt, 1))<< " "<<
+                    sqlite3_column_int(stmt, 2);
+        }
+        else if (res == SQLITE_DONE)
+        {
+            qDebug() << "Done";
+            break;
+        }
+        else
+        {
+            qDebug() << res;
+            break;
+        }
+    }
+
+
     QVBoxLayout *mainLayout = new QVBoxLayout;
-    mainLayout->addWidget(new QLabel("Lol"));
-       setLayout(mainLayout);
+    mainLayout->addWidget(new QLabel("Number of records"));
+    setLayout(mainLayout);
 
     trayIcon->show();
-    setWindowTitle("Wind");
+    setWindowTitle("Computer usage tracker");
     resize(400, 300);
+}
+Window::~Window(){
+    sqlite3_close(db);
 }
 
 void Window::iconActivated(QSystemTrayIcon::ActivationReason reason) {

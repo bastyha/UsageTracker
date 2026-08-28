@@ -3,11 +3,13 @@
 
 #include <QDialog>
 #include <QSystemTrayIcon>
+#include <sqlite3.h>
 
 class Window : public QDialog
 {
 public:
     Window();
+    ~Window();
 
     void setVisible(bool visible) override;
 
@@ -27,6 +29,7 @@ private:
 
     QSystemTrayIcon *trayIcon;
     QMenu *trayIconMenu;
+    sqlite3* db;
 };
 
 #endif // WINDOW_H

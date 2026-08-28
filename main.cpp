@@ -5,21 +5,6 @@
 
 int main(int argc, char *argv[])
 {
-    /*QGuiApplication app(argc, argv);
-
-    QQmlApplicationEngine engine;
-    QObject::connect(
-        &engine,
-        &QQmlApplicationEngine::objectCreationFailed,
-        &app,
-        []() { QCoreApplication::exit(-1); },
-        Qt::QueuedConnection);
-    engine.loadFromModule("UsageTracker", "Main");
-
-    Window window;
-    window.show();
-    return QGuiApplication::exec();
-    */
     QApplication app(argc, argv);
 
     if (!QSystemTrayIcon::isSystemTrayAvailable()) {
@@ -28,7 +13,6 @@ int main(int argc, char *argv[])
                                             QMessageBox::Close | QMessageBox::Ignore);
         if (choice == QMessageBox::Close)
             return 1;
-        // Otherwise "lurk": if a system tray is started later, the icon will appear.
     }
     QApplication::setQuitOnLastWindowClosed(false);
 
