@@ -39,8 +39,8 @@ set_target_properties(appUsageTracker PROPERTIES
 
 find_package(Qt6 REQUIRED COMPONENTS Widgets)
 if(WIN32)
-  set(CMAKE_PREFIX_PATH ${CMAKE_PREF})
-  set(SQLite3_LIBRARY ${SQLITE_LIB})
+  set(CMAKE_PREFIX_PATH $ENV{CMAKE_PREF})
+  set(SQLite3_LIBRARY $ENV{SQLITE_LIB})
 endif()
 find_package(SQLite3)
 
